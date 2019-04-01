@@ -2,7 +2,9 @@ package controlador;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import javax.swing.JOptionPane;
+import java.util.ArrayList;
+import java.util.List;
+
 import vista.FormCompanyia;
 import vista.LlistatCompanyies;
 import vista.MenuCompanyia;
@@ -26,7 +28,8 @@ public class ControladorCompanyia implements ActionListener {
     - Es crida a afegirListenersMenu
      */
     public ControladorCompanyia() {
-
+        menuCompanyia = new MenuCompanyia();
+        afegirListenersMenu();
     }
 
     /*  
@@ -36,7 +39,9 @@ public class ControladorCompanyia implements ActionListener {
     Retorn: cap
      */
     private void afegirListenersMenu() {
- 
+        for (int i = 0; i < menuCompanyia.getMenuButtons().length; i++) {
+            menuCompanyia.getMenuButtons()[i].addActionListener(this);
+        }
     }
 
     /*  
@@ -46,7 +51,9 @@ public class ControladorCompanyia implements ActionListener {
     Retorn: cap
      */
     private void afegirListenersForm() {
-      
+        formCompanyia.getDesar().addActionListener(this);
+        formCompanyia.getSortir().addActionListener(this);
+        
     }
 
     /*  
@@ -56,7 +63,7 @@ public class ControladorCompanyia implements ActionListener {
     Retorn: cap
      */
     private void afegirListenersLlistat() {
-       
+       llistatCompanyies.getSortir().addActionListener(this);
     }
 
     /*  

@@ -27,12 +27,13 @@ public class ControladorPrincipal implements ActionListener {
     CONSTRUCTOR
     Paràmetres:cap
     Accions:
-    - S'inicialitza l'atribut menuPrincipal (això mostrarà el menú principal)
-    - A cada botó del menú principal se li afegeix el listener tenint en compte què el
+    - DONE: S'inicialitza l'atribut menuPrincipal (això mostrarà el menú principal)
+    - PENDENT: A cada botó del menú principal se li afegeix el listener tenint en compte què el
     mètode actionPerformed, està implementat en aquesta classe.
      */
     public ControladorPrincipal() {
-
+        menuPrincipal = new MenuPrincipal();
+        
     }
 
     /*  
@@ -42,7 +43,12 @@ public class ControladorPrincipal implements ActionListener {
     Retorn: cap
      */
     public void actionPerformed(ActionEvent e) {
-
+        
+        // Ha de passar un enter i passa objecte
+        // XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+        Object gestorEsdeveniments = e.getSource();
+        seleccionarOpcio(gestorEsdeveniments);
+        // XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
     }
 
     private void seleccionarOpcio(int opcio) {
