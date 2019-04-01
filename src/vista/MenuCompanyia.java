@@ -1,5 +1,6 @@
 package vista;
 
+import java.awt.GridLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 
@@ -10,7 +11,7 @@ import javax.swing.JFrame;
 public class MenuCompanyia {
     private JFrame frame;
 
-    private JButton[] menuButtons = new JButton[5];
+    private JButton[] menuButtons = new JButton[7];
 
     private final int AMPLADA = 800;
     private final int ALCADA = 600;
@@ -36,7 +37,30 @@ public class MenuCompanyia {
         
     */
     public MenuCompanyia() {
-
+        frame = new JFrame("Menu Companyia");
+        frame.setSize(AMPLADA, ALCADA);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setResizable(true);
+        
+        frame.setLayout(new GridLayout(0, 1, 10, 10));
+        
+        menuButtons[0] = new JButton("0. Sortir");
+        menuButtons[1] = new JButton("1. Alta");
+        menuButtons[2] = new JButton("2. Seleccionar");
+        menuButtons[3] = new JButton("3. Modificar");
+        menuButtons[4] = new JButton("4. Llistar companyies");
+        menuButtons[5] = new JButton("5. Carregar companyia");
+        menuButtons[6] = new JButton("6. Desar companyia");
+        
+        frame.add(menuButtons[0]);
+        frame.add(menuButtons[1]);
+        frame.add(menuButtons[2]);
+        frame.add(menuButtons[3]);
+        frame.add(menuButtons[4]);
+        frame.add(menuButtons[5]);
+        frame.add(menuButtons[6]);
+        
+        frame.setVisible(true);
     }
 
     public JFrame getFrame() {

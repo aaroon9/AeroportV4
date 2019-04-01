@@ -45,6 +45,37 @@ public class FormAvio {
         
      */
     public FormAvio() {
+        frame = new JFrame("Formulari Avió");
+        frame.setSize(AMPLADA, ALCADA);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setResizable(true);
+        
+        frame.setLayout(new GridLayout(0, 1, 10, 10));
+        
+        lCodi = new JLabel("Codi");
+        tCodi = new JTextField(20);
+        lFabricant = new JLabel("Fabricant");
+        tFabricant = new JTextField(20);
+        lModel = new JLabel("Model");
+        tModel = new JTextField(20);
+        lCapacitat = new JLabel("Capacitat");
+        tCapacitat = new JTextField(20);
+        
+        bDesar = new JButton("Desar");
+        bSortir = new JButton("Sortir");
+        
+        frame.add(lCodi);
+        frame.add(tCodi);
+        frame.add(lFabricant);
+        frame.add(tFabricant);
+        frame.add(lModel);
+        frame.add(tModel);
+        frame.add(lCapacitat);
+        frame.add(tCapacitat);
+        frame.add(bDesar);
+        frame.add(bSortir);
+        
+        frame.setVisible(true);
 
     }
 
@@ -56,7 +87,11 @@ public class FormAvio {
      - Mostrar els valors passats per paràmetre en els camps de text pertinents del formulari.
      */
     public FormAvio(String codi, String fabricant, String model, int capacitat) {
-
+        this();
+        tCodi.setText(codi);
+        tFabricant.setText(fabricant);
+        tModel.setText(model);
+        tCapacitat.setText(String.valueOf(capacitat));
     }
 
     public JFrame getFrame() {

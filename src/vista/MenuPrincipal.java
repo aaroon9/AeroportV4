@@ -1,7 +1,9 @@
-package vista;
+package  vista;
 
+import java.awt.GridLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JPanel;
 
 /**
  *
@@ -9,6 +11,7 @@ import javax.swing.JFrame;
  */
 public class MenuPrincipal {
     private JFrame frame;
+    private JPanel panell;
 
     private JButton[] menuButtons = new JButton[3];
 
@@ -32,7 +35,22 @@ public class MenuPrincipal {
         
     */ 
     public MenuPrincipal() {
+        frame = new JFrame("Menu Principal");
+        frame.setSize(AMPLADA, ALCADA);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setResizable(true);
         
+        frame.setLayout(new GridLayout(3, 1, 10, 10));
+        
+        menuButtons[0] = new JButton("0. Sortir");
+        menuButtons[1] = new JButton("1. Menú Companyia");
+        menuButtons[2] = new JButton("2. Menú Avio");
+        
+        frame.add(menuButtons[0]);
+        frame.add(menuButtons[1]);
+        frame.add(menuButtons[2]);
+        
+        frame.setVisible(true);
     }
 
     public JFrame getFrame() {
