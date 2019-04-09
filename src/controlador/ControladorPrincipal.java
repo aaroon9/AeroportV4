@@ -23,7 +23,7 @@ public class ControladorPrincipal implements ActionListener {
     static private GestorPersistencia gp = new GestorPersistencia();
     static private final String[] METODEPERSISTENCIA = {"XML", "JDBC"};
 
-    /*  
+    /*
     CONSTRUCTOR
     Paràmetres:cap
     Accions:
@@ -33,42 +33,52 @@ public class ControladorPrincipal implements ActionListener {
      */
     public ControladorPrincipal() {
         menuPrincipal = new MenuPrincipal();
-        
+        addActionListeners(menuPrincipal.getMenuButtons());
     }
 
-    /*  
-    Paràmetres: ActionEvent    
+    private void addActionListeners(JButton[] menuPrButtons) {
+  		for (JButton jButton : menuPrButtons) {
+  			jButton.addActionListener(this);
+  		}
+  	}
+
+    /*
+    Paràmetres: ActionEvent
     Acció: S'ha de cridar a seleccionarOpcio segons l'opció premuda. Penseu que l'opció es correspon amb
-    la posició que el botó ocupa a l'array de botons de menuPrincipal.        
+    la posició que el botó ocupa a l'array de botons de menuPrincipal.
     Retorn: cap
      */
     public void actionPerformed(ActionEvent e) {
-        
-        // Ha de passar un enter i passa objecte
-        // XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-        Object gestorEsdeveniments = e.getSource();
-        seleccionarOpcio(gestorEsdeveniments);
-        // XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+
+        if (e.getActionCommand() == " 0. Sortir") {
+          seleccionarOpcio(0);
+        } else if (e.getActionCommand() == " 1. Menú Companyia") {
+          seleccionarOpcio(1);
+        } else if (e.getActionCommand() == " 2. Menú Avió") {
+          seleccionarOpcio(2);
+        }
     }
 
     private void seleccionarOpcio(int opcio) {
-        switch (opcio) {
-            case 0: //Sortir
-                System.exit(0);
-                break;
-            case 1: //Gestió companyia
+      
+      switch (opcio) {
+        case 0:
+            System.exit(0);
+            break;
+        case 1:
+            menuPrincipal.getFrame().setVisible(false);
+            ControladorCompanyia controladorCompanyia = new ControladorCompanyia();
+            break;
+        case 2:
+            if (companyiaActual != null) {
                 menuPrincipal.getFrame().setVisible(false);
-                ControladorCompanyia controladorCompanyia = new ControladorCompanyia();
-                break;
-            case 2: //Gestió avió
-                if (companyiaActual != null) {
-                    menuPrincipal.getFrame().setVisible(false);
-                    ControladorAvio controladorAvio = new ControladorAvio();
-                } else {
-                    JOptionPane.showMessageDialog(null, "Has de seleccionar una companyia al menu companyia.", "Avís", JOptionPane.PLAIN_MESSAGE);
-                }
-                break;
-        }
+                ControladorAvio controladorAvio = new ControladorAvio();
+            } else {
+              // showMessageDialog(Component parentComponent, Object message, String title, int messageType)
+                JOptionPane.showMessageDialog(null, "No has seleccionat cap companyia", "Warning", JOptionPane.PLAIN_MESSAGE);
+            }
+            break;
+      }
     }
 
     public static String getFITXER() {

@@ -84,20 +84,22 @@ public class ControladorCompanyia implements ActionListener {
      */
     private void seleccionarCompanyia() {
 
-        JPanel pCompanyia = new JPanel();
-        pCompanyia.setLayout(new GridLayout(1, 2));
+        List codiComp = new ArrayList();
+        for (int i = 0; i < ControladorPrincipal.getCompanyies().length; i++) {
+          if (ControladorPrincipal.getCompanyies()[i] != null) {
+            codiComp.add(ControladorPrincipal.getCompanyies()[i].getCodi());
+          }
+        }
+        Object[] codis = codiComp.toArray();
 
-        hola = new JButton("Hola");
-        adeu = new JButton("Adéu");
+        // int showOptionDialog(Component parentComponent, Object message, String title,
+        //     int optionType, int messageType, Icon icon, Object[] options, Object initialValue)
+        int opcio = JOptionPane.showOptionDialog(null, "Selecciona de la llista", "Seleccionar companyia",
+            JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, codis, null);
 
-        //Afegim l'escoltador
-        hola.addActionListener(this);
-        adeu.addActionListener(this);
-
-        //Els afegim al panell
-        botonera.add(hola);
-        botonera.add(adeu);
-
+        if (opcio != -1) {
+          ControladorPrincipal.setCompanyiaActual(ControladorPrincipal.getCompanyies()[opcio]);
+        }
     }
 
     /*
@@ -114,7 +116,7 @@ public class ControladorCompanyia implements ActionListener {
 
         if (formCompanyia.gettNom() != null && "".equals(formCompanyia.gettNom().getText())) {
             // showMessageDialog(Component parentComponent, Object message, String title, int messageType, Icon icon)
-            JOptionPane.showMessageDialog(null, "Nom no introduit", "Eh tu", JOptionPane.WARNING_MESSAGE, null);
+            JOptionPane.showMessageDialog(null, "Nom no introduit", "Warning", JOptionPane.WARNING_MESSAGE, null);
             return false;
         } else {
             return true;
@@ -172,54 +174,126 @@ public class ControladorCompanyia implements ActionListener {
      */
     public void actionPerformed(ActionEvent e) {
 
+      if (e.getSource().equals(menuCompanyia.getMenuButtons()[0])) {
+        opcioSeleccionada = 0;
+        seleccionarOpcio(0);
+      } else if (e.getSource().equals(menuCompanyia.getMenuButtons()[1])) {
+        opcioSeleccionada = 1;
+        seleccionarOpcio(1);
+      } else if (e.getSource().equals(menuCompanyia.getMenuButtons()[2])) {
+        opcioSeleccionada = 2;
+        seleccionarOpcio(2);
+      } else if (e.getSource().equals(menuCompanyia.getMenuButtons()[3])) {
+        opcioSeleccionada = 3;
+        seleccionarOpcio(3);
+      } else if (e.getSource().equals(menuCompanyia.getMenuButtons()[4])) {
+        opcioSeleccionada = 4;
+        seleccionarOpcio(4);
+      } else if (e.getSource().equals(menuCompanyia.getMenuButtons()[5])) {
+        opcioSeleccionada = 5;
+        seleccionarOpcio(5);
+      } else if (e.getSource().equals(menuCompanyia.getMenuButtons()[6])) {
+        opcioSeleccionada = 6;
+        seleccionarOpcio(6);
+      }
+
+      if (formCompanyia != null) {
+        if (e.getSource().equals(formCompanyia.getDesar())) {
+          switch (opcioSeleccionada) {
+          case 1:
+            if (validarCompanyia()) {
+              try {
+                Companyia compa1 = new Companyia(formCompanyia.gettNom().getText());
+
+                ControladorPrincipal.getCompanyies()[ControladorPrincipal.getPosicioCompanyies()] = compa1;
+                ControladorPrincipal.setPosicioCompanyies(ControladorPrincipal.getPosicioCompanyies() + 1);
+
+                formCompanyia.getCodi().setText(String.valueOf(compa1.getCodi()));
+                ControladorPrincipal.setCompanyiaActual(compa1);
+
+                opcioSeleccionada = 2;
+
+              } catch (NumberFormatException e1) {
+                JOptionPane.showMessageDialog(null, "Excepcio", e1.getMessage(), JOptionPane.WARNING_MESSAGE, null);
+              }
+            }
+            break;
+
+          case 3:
+            if (validarCompanyia()) {
+              Companyia compa2 = null;
+              for (int i = 0; i < ControladorPrincipal.getCompanyies().length && ControladorPrincipal.getCompanyies()[i] != null; i++) {
+                if (ControladorPrincipal.getCompanyies()[i].getCodi() == Integer.parseInt(formCompanyia.getCodi().getText())) {
+                  compa2 = (Companyia) ControladorPrincipal.getCompanyies()[i];
+                }
+              }
+              if (compa2 != null) {
+                compa2.setNom(formCompanyia.gettNom().getText());
+              }
+            }
+            break;
+          }
+        } else if (e.getSource().equals(formCompanyia.getSortir())) {
+          formCompanyia.getFrame().setVisible(false);
+          menuCompanyia.getFrame().setVisible(true);
+        }
+      }
+
+      if (llistatCompanyies != null) {
+        if (e.getSource().equals(llistatCompanyies.getSortir())) {
+          llistatCompanyies.getFrame().setVisible(false);
+          menuCompanyia.getFrame().setVisible(true);
+        }
+      }
     }
 
     private void seleccionarOpcio(int opcio) {
         switch (opcio) {
 
-            case 0: //sortir
+            case 0:
                 ControladorPrincipal.getMenuPrincipal().getFrame().setVisible(true);
                 break;
 
-            case 1: // alta
+            case 1:
                 if (ControladorPrincipal.getPosicioCompanyies() < ControladorPrincipal.getMAXCOMPANYIES()) {
                     formCompanyia = new FormCompanyia();
                     afegirListenersForm();
                 } else {
                     menuCompanyia.getFrame().setVisible(true);
-                    JOptionPane.showMessageDialog(menuCompanyia.getFrame(), "Màxim nombre de companyies assolides.", "Avís", JOptionPane.PLAIN_MESSAGE);
+                    JOptionPane.showMessageDialog(menuCompanyia.getFrame(), "Masses companyies", "Warning", JOptionPane.PLAIN_MESSAGE);
                 }
                 break;
 
-            case 2: //seleccionar
+            case 2:
                 menuCompanyia.getFrame().setVisible(true);
                 if (ControladorPrincipal.getCompanyies()[0] != null) {
                     seleccionarCompanyia();
                 } else {
-                    JOptionPane.showMessageDialog(menuCompanyia.getFrame(), "Abans s'ha de crear al menys una companyia", "Avís", JOptionPane.PLAIN_MESSAGE);
+                    JOptionPane.showMessageDialog(menuCompanyia.getFrame(), "No hi ha cap companyia creada", "Warning", JOptionPane.PLAIN_MESSAGE);
                 }
                 break;
 
-            case 3: //modificar
+            case 3:
                 if (ControladorPrincipal.getCompanyies()[0] != null) {
                     seleccionarCompanyia();
                     formCompanyia = new FormCompanyia(ControladorPrincipal.getCompanyiaActual().getCodi(), ControladorPrincipal.getCompanyiaActual().getNom());
                     afegirListenersForm();
                 } else {
                     menuCompanyia.getFrame().setVisible(true);
-                    JOptionPane.showMessageDialog(menuCompanyia.getFrame(), "Abans s'ha de crear al menys una companyia", "Avís", JOptionPane.PLAIN_MESSAGE);
+                    JOptionPane.showMessageDialog(menuCompanyia.getFrame(), "No hi ha cap companyia creada", "Warning", JOptionPane.PLAIN_MESSAGE);
                 }
                 break;
 
-            case 4: // llistar
+            case 4:
                 if (ControladorPrincipal.getCompanyies()[0] != null) {
                     llistatCompanyies = new LlistatCompanyies();
                     afegirListenersLlistat();
                 } else {
                     menuCompanyia.getFrame().setVisible(true);
-                    JOptionPane.showMessageDialog(menuCCompanyia.getFrame(), "Abans s'ha de crear al menys una companyia", "Avís", JOptionPane.PLAIN_MESSAGE);
+                    JOptionPane.showMessageDialog(menuCCompanyia.getFrame(), "No hi ha cap companyia creada", "Warning", JOptionPane.PLAIN_MESSAGE);
                 }
                 break;
+
             case 5: //Desar contingut
                 /*
                  - Es mostra un diàleg (JOptionPane.showOptionDialog) amb un botó, que representa al mètode de persistència del document,
