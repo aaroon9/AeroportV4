@@ -1,16 +1,26 @@
 package controlador;
 
+import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.sql.Array;
+import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import model.Avio;
 import vista.FormAvio;
 import vista.LlistatAvions;
 import vista.MenuAvio;
+import principal.Component;
+
+import javax.swing.*;
+import principal.GestioVolsExcepcio;
 
 /**
  *
  * @author root
  */
-public class ControladorAvio {
+public class ControladorAvio implements ActionListener {
     private MenuAvio menuAvio;
     private FormAvio formAvio = null;
     private LlistatAvions llistatAvions = null;
@@ -25,7 +35,8 @@ public class ControladorAvio {
     - Es crida a afegirListenersMenu
      */
     public ControladorAvio() {
-
+        menuAvio = new MenuAvio();
+        afegirListenersMenu();
     }
 
     /*  
@@ -35,7 +46,10 @@ public class ControladorAvio {
     Retorn: cap
      */
     private void afegirListenersMenu() {
-
+        for (int i = 0; i < menuAvio.getMenuButtons().length; i++) {
+            menuAvio.getMenuButtons()[i].addActionListener(this);
+        }
+        
     }
 
     /*  
@@ -45,7 +59,8 @@ public class ControladorAvio {
     Retorn: cap
      */
     private void afegirListenersForm() {
-
+        formAvio.getDesar().addActionListener(this);
+        formAvio.getSortir().addActionListener(this);
     }
 
     /*  
@@ -55,7 +70,7 @@ public class ControladorAvio {
     Retorn: cap
      */
     private void afegirListenersLlistat() {
- 
+        llistatAvions.getSortir().addActionListener(this);
     }
 
     /*  
@@ -74,8 +89,22 @@ public class ControladorAvio {
     Retorn: avió seleccionat de la companyia actual.
      */
     private Avio seleccionarAvio() {
-
-
+        ArrayList <Avio> llistatAvions = new ArrayList<Avio>();
+        for(Component compo : ControladorPrincipal.getCompanyiaActual().getComponents()){
+            if(compo instanceof Avio){
+                llistatAvions = (ArrayList<Avio>) compo;
+            }
+        }
+        
+        Avio[] objArray = (Avio[]) llistatAvions.toArray();
+         
+        int opcio = JOptionPane.showOptionDialog(null,"Seleccionar avió","Seleccionar avió!",JOptionPane.DEFAULT_OPTION,JOptionPane.QUESTION_MESSAGE,null, objArray,-1);
+        
+        if (opcio == -1){
+            return null;
+        }else{
+            return (Avio) ControladorPrincipal.getCompanyiaActual().getComponents().get(opcio);
+        }
     }
 
     /*  
@@ -88,7 +117,17 @@ public class ControladorAvio {
     Retorn: Verdader si s'han introduït totes les dades. Fals en cas contrari.
      */
     private Boolean validarAvio() {
-
+        if(formAvio.getCodi() == null || formAvio.gettFabricant() == null || formAvio.gettModel() == null || formAvio.gettCapacitat() == null){
+           
+           JOptionPane.showMessageDialog(null, "S'han d'introduir dades a tots els camps", "ATENCIÓ!!!", JOptionPane.WARNING_MESSAGE);
+           return false;
+           
+        }else{
+            
+            return true;
+            
+        }
+        
     }
 
     /*
@@ -140,6 +179,59 @@ public class ControladorAvio {
         Retorn: cap
      */
     public void actionPerformed(ActionEvent e) {
+        Object gestor = e.getSource();
+        
+        if (gestor.equals(menuAvio.getMenuButtons()[0])){//Premen el botto sortir
+            opcioSeleccionada = 0;
+            seleccionarOpcio(opcioSeleccionada);
+        }else if(gestor.equals(menuAvio.getMenuButtons()[1])){ //botto Alta
+            opcioSeleccionada = 1;
+            seleccionarOpcio(opcioSeleccionada);
+        }else if(gestor.equals(menuAvio.getMenuButtons()[2])){ //botto modd
+            opcioSeleccionada = 2;
+            seleccionarOpcio(opcioSeleccionada);
+        }else if(gestor.equals(menuAvio.getMenuButtons()[3])){
+            opcioSeleccionada = 3;
+            seleccionarOpcio(opcioSeleccionada);
+        }
+        
+        if(formAvio != null){
+            if(gestor.equals(formAvio.getDesar())){
+                switch(opcioSeleccionada){
+                    case 1:
+                        if(validarAvio()){
+                            try {
+                                avio = new Avio (formAvio.getCodi().getText(), formAvio.gettFabricant().getText(), formAvio.gettModel().getText(), Integer.parseInt(formAvio.gettCapacitat().getText()));
+                                ControladorPrincipal.getCompanyiaActual().afegirAvio(avio);
+                            } catch (GestioVolsExcepcio exc) {
+                                JOptionPane.showMessageDialog(null, exc, "EXCEPCIÓ!!!", JOptionPane.WARNING_MESSAGE);
+                            }
+                        }
+                    break;
+                    
+                    case 2:
+                        if(validarAvio()){
+                            //Agafem el avio actual
+                            int opcio = ControladorPrincipal.getCompanyiaActual().seleccionarComponent(1, formAvio.getCodi().getText());
+                            avio = (Avio) ControladorPrincipal.getCompanyiaActual().getComponents().get(opcio);
+                            //modifiquem l'avio actual amb les dades del formulari
+                            avio.setModel(formAvio.gettModel().getText());
+                            avio.setFabricant(formAvio.gettFabricant().getText());
+                            avio.setCapacitat(Integer.parseInt(formAvio.gettCapacitat().getText()));
+                        }
+                    break;
+                }
+            }else if(gestor.equals(formAvio.getSortir())){
+                formAvio.getFrame().setVisible(false);
+                menuAvio.getFrame().setVisible(true);
+            }
+        }
+        if(llistatAvions != null){
+            if(gestor.equals(llistatAvions.getSortir())){
+                llistatAvions.getFrame().setVisible(false);
+                menuAvio.getFrame().setVisible(true);
+            }
+        }
        
     }
 
