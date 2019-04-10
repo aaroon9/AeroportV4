@@ -1,6 +1,7 @@
 package persistencia;
 
 import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.text.ParseException;
 import model.Companyia;
@@ -39,7 +40,22 @@ public class GestorJDBC implements ProveedorPersistencia {
      *
      */
     public void estableixConnexio() throws SQLException {
-
+        
+        try{
+            //Carreguem el controlador MySQL. 
+            Class.forName("com.mysql.jdbc.Driver");
+           
+            conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/gestioVolv4","root",null); //Connectem amb la base de dades
+            
+       }catch (ClassNotFoundException e1){
+           //Error si no es pot llegir el controlador 
+           System.out.println("ERROR: no s'ha trobat el controlador de la BD: "+e1.getMessage());
+           conn = null;
+        }catch (SQLException e2) {
+           //Error SQL: de usuari o contrasenya
+           System.out.println("ERROR: SQL ha fallat: "+e2.getMessage());
+           conn = null;
+	}
     }
 
    /*
@@ -48,7 +64,9 @@ public class GestorJDBC implements ProveedorPersistencia {
      *
      */
     public void tancaConnexio() throws SQLException {
-  
+        if (conn!=null){ //Si existeix la connexió....
+            conn.close(); //Tanquem la connexió
+        }
     }
 
     /*
